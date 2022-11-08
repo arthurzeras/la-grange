@@ -10,11 +10,6 @@
     "src/**/*.tsx",
     "src/**/*.vue"
   ],
-  "paths": {
-    "@/*": [
-      "./src/*"
-    ],
-  },
   "compilerOptions": {
     "noEmit": true,
     "strict": true,
@@ -30,6 +25,11 @@
     "lib": [
       "ESNext",
       "DOM"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    },
   },
 }
