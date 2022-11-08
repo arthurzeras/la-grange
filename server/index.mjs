@@ -2,8 +2,8 @@ import axios from 'axios';
 import express from 'express';
 
 const PORT = 4444;
-const BASE_URL = '';
-const API_TOKEN = ``;
+const BASE_URL = process.env.BASE_URL;
+const API_TOKEN = process.env.API_TOKEN;
 
 const app = express();
 
