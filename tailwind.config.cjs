@@ -4,5 +4,8 @@ module.exports = {
   plugins: [],
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ['Mulish', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+    },
   },
 };
