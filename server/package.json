@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.mjs"
+    "start": "nodemon -r dotenv/config app/main.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@kubernetes/client-node": "^0.17.1",
     "axios": "^1.1.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2"
