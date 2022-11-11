@@ -9,7 +9,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const kubeconfigDir = resolve(__dirname, '..', 'kube');
 
 /**
- * @returns {Record<string, k8s.Config>}
+ * @returns {Record<string, {file: string, name: string, api: k8s.CoreV1Api, kube: k8s.KubeConfig>}
  */
 function getClients() {
   const files = readdirSync(kubeconfigDir);
@@ -18,12 +18,27 @@ function getClients() {
     .map((file) => ({
       file,
       name: file.split('.').pop(),
-      client: getClient(`${kubeconfigDir}/${file}`),
+      api: getApiClient(`${kubeconfigDir}/${file}`),
+      kube: getKubeConfigClient(`${kubeconfigDir}/${file}`),
     }))
     .reduce((clients, client) => ({ ...clients, [client.name]: client }), {});
 }
 
-function getClient(filepath = '') {
+/**
+ * @param {string} filepath
+ * @returns {k8s.CoreV1Api}
+ */
+function getApiClient(filepath = '') {
+  const client = new k8s.KubeConfig();
+  client.loadFromFile(filepath);
+  return client.makeApiClient(k8s.CoreV1Api);
+}
+
+/**
+ * @param {string} filepath
+ * @returns {k8s.CoreV1Api}
+ */
+function getKubeConfigClient(filepath = '') {
   const client = new k8s.KubeConfig();
   client.loadFromFile(filepath);
   return client;
