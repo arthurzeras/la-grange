@@ -3,13 +3,6 @@
     <strong class="font-bold block text-center">
       {{ props.cluster.name }}
     </strong>
-
-    <!-- TODO: add some metadata -->
-    <!-- <div class="flex gap-4">
-      <small>CPU: 0.1/4 cores</small>
-      <small>Mem: 70 MiB/7.79 GiB</small>
-      <small>Pods: 10/1231</small>
-    </div> -->
   </a>
 </template>
 

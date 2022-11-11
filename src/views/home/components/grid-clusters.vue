@@ -1,10 +1,10 @@
 <template>
-  <article class="grid grid-cols-4 gap-10 w-full">
+  <article class="flex flex-row gap-10 w-full justify-center">
     <card-cluster
       v-for="cluster in clusters"
-      :key="cluster.id"
+      :key="cluster.name"
       :cluster="cluster"
-      class="group"
+      class="basis-1/4"
     />
   </article>
 </template>
@@ -16,20 +16,18 @@ import CardCluster from './card-cluster.vue';
 
 const { execute, response } = useHttp();
 
-onMounted(() => execute({ url: '/v3/clusters' }));
+onMounted(() => execute({ url: 'cluster' }));
 
 const clusters = computed(() => {
-  const list = response.value?.data?.data;
+  const list = response.value?.data;
 
   if (!list?.length) {
     return [];
   }
 
   return list.map((cluster: any) => ({
-    id: cluster.id,
+    url: cluster.url,
     name: cluster.name,
-    limits: cluster.limits,
-    requested: cluster.requested,
   }));
 });
 </script>
