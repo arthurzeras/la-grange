@@ -12,9 +12,10 @@
 
 <script setup lang="ts">
 import ListDeployment from './list-deployment.vue';
+import { IDeploymentItem } from '@/types/deployment';
 
 defineProps<{
   name: string;
-  deployments: Record<string, any>;
+  deployments: IDeploymentItem[];
 }>();
 </script>

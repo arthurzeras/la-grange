@@ -14,9 +14,10 @@ import { useRoute } from 'vue-router';
 import { useHttp } from '@/composables';
 import { computed, onMounted } from 'vue';
 import CardNamespace from './components/card-namespace.vue';
+import { IDeploymentResponse, IDeploymentItem } from '@/types/deployment';
 
 const route = useRoute();
-const { execute, response } = useHttp();
+const { execute, response } = useHttp<IDeploymentResponse>();
 
 onMounted(() => execute({ url: `${route.params.cluster}/deployment` }));
 
@@ -30,9 +31,11 @@ const deployments = computed(() => {
   return data.items;
 });
 
-const byNamespace = computed<Record<string, any[]>>(() => {
+const byNamespace = computed(() => {
+  type Namespaces = Record<string, IDeploymentItem[]>;
+
   return deployments.value.reduce(
-    (namespaces: Record<string, any[]>, deployment: Record<string, any>) => {
+    (namespaces: Namespaces, deployment: IDeploymentItem) => {
       if (!(deployment.metadata.namespace in namespaces)) {
         namespaces[deployment.metadata.namespace] = [];
       }
