@@ -1,18 +1,28 @@
 <template>
-  <a href="#" class="border bg-blue-50 rounded-2xl px-6 py-4 hover:bg-blue-100">
+  <router-link
+    :to="routeLink"
+    class="border bg-blue-50 rounded-2xl px-6 py-4 hover:bg-blue-100"
+  >
     <strong class="font-bold block text-center">
       {{ props.cluster.name }}
     </strong>
-  </a>
+  </router-link>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+
 const props = defineProps<{
   cluster: {
-    id: string;
+    url: string;
     name: string;
-    limits: Record<string, string>;
-    requested: Record<string, string>;
   };
 }>();
+
+const routeLink = computed(() => ({
+  name: 'deployments.list',
+  params: {
+    cluster: props.cluster.name,
+  },
+}));
 </script>

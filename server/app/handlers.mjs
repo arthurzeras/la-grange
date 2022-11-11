@@ -33,7 +33,7 @@ export function listClusters(req, res) {
  * @returns {{name: string, url: string}[]}
  */
 export async function listDeployments(req, res) {
-  const { cluster, namespace } = getClusterAndNamespaceFromUrl(req.url);
+  const { cluster } = getClusterAndNamespaceFromUrl(req.url);
 
   if (!(cluster in clients)) {
     return res.status(400).send({ message: `cluster "${cluster}" not found` });
@@ -42,7 +42,7 @@ export async function listDeployments(req, res) {
   const api = clients[cluster].api;
 
   try {
-    const response = await api.listNamespacedDeployment(namespace);
+    const response = await api.listDeploymentForAllNamespaces();
     return res.send(response.body);
   } catch (error) {
     return res.status(500).send({ message: 'Cannot list deployments' });
