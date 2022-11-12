@@ -1,19 +1,43 @@
 <template>
-  <!-- <div>
-    <list-deployment
-      v-for="deployment in deployments"
-      :key="deployment.metadata.uid"
-      :deployment="deployment"
-    />
-  </div> -->
-
-  <div class="bg-gray-100 rounded-lg p-4 shadow">
-    <header class="border-b border-b-gray-200">
-      <span class="block leading-3 text-sm text-gray-400">Namespace:</span>
+  <div class="bg-gray-100 rounded-lg shadow border border-gray-200">
+    <header class="px-4 py-2 border-b bg-gray-300 rounded-t-lg">
+      <span class="block leading-3 text-sm text-gray-500">Namespace:</span>
       <span class="text-sm font-bold uppercase">
         {{ name }}
       </span>
     </header>
+
+    <table class="table w-full">
+      <thead>
+        <tr class="border-b border-gray-200">
+          <th class="pl-4 py-2 w-1/4 text-left">Name</th>
+          <th class="py-2 w-2/4 text-left">Image</th>
+          <th class="pr-4 py-2 w-1/4 text-center">Pods</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr
+          v-for="deployment in deployments"
+          :key="deployment.metadata.uid"
+          class="border border-gray-200 last:border-0"
+        >
+          <td class="pl-4 py-4 w-1/4 text-left">
+            {{ deployment.metadata.name }}
+          </td>
+
+          <td class="py-4 w-2/4 text-left break-all">
+            {{ deployment.spec.template.spec.containers[0].image }}
+          </td>
+
+          <td class="pr-4 py-4 w-1/4 text-center">
+            <span>{{ deployment.status.readyReplicas || 0 }}</span>
+            <span>/</span>
+            <span>{{ deployment.status.replicas || 0 }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
