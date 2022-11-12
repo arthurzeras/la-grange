@@ -12,7 +12,7 @@
         <tr class="border-b border-gray-200">
           <th class="pl-4 py-2 w-1/4 text-left">Name</th>
           <th class="py-2 w-2/4 text-left">Image</th>
-          <th class="pr-4 py-2 w-1/4 text-center">Pods</th>
+          <th class="pr-4 py-2 w-1/4 text-right">Pods</th>
         </tr>
       </thead>
 
@@ -47,10 +47,19 @@
             </button>
           </td>
 
-          <td class="pr-4 py-4 w-1/4 text-center">
-            <span>{{ deployment.status.readyReplicas || 0 }}</span>
-            <span>/</span>
-            <span>{{ deployment.status.replicas || 0 }}</span>
+          <td class="pr-4 py-4 w-1/4 text-right">
+            <span class="inline-block">
+              <span>{{ deployment.status.readyReplicas || 0 }}</span>
+              <span>/</span>
+              <span>{{ deployment.status.replicas || 0 }}</span>
+            </span>
+
+            <button
+              class="inline-block ml-2 bg-blue-200 px-1 py-0.5 rounded text-sm hover:bg-blue-300"
+            >
+              <span>details</span>
+              <x-icon name="chevron-double-down" class="h-4 w-4" />
+            </button>
           </td>
         </tr>
       </tbody>

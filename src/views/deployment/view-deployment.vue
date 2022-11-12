@@ -8,18 +8,6 @@
       </div>
     </header>
 
-    <!-- <article class="container mx-auto my-4 px-4">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th class="w-1/4 text-left">Name</th>
-            <th class="w-2/4 text-left">Image</th>
-            <th class="w-1/4 text-center">Pods</th>
-          </tr>
-        </thead>
-      </table>
-    </article> -->
-
     <article class="container mx-auto my-4 gap-4 flex flex-col">
       <card-namespace
         v-for="(_deployments, name) in byNamespace"
