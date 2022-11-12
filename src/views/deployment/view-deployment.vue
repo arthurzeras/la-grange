@@ -1,12 +1,22 @@
 <template>
-  <h1>Deployments view</h1>
+  <section>
+    <header class="bg-white shadow">
+      <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          Deployments
+        </h1>
+      </div>
+    </header>
 
-  <card-namespace
-    v-for="(_deployments, name) in byNamespace"
-    :key="name"
-    :name="name"
-    :deployments="_deployments"
-  />
+    <article class="container mx-auto my-4 gap-4 flex flex-col">
+      <card-namespace
+        v-for="(_deployments, name) in byNamespace"
+        :key="name"
+        :name="name"
+        :deployments="_deployments"
+      />
+    </article>
+  </section>
 </template>
 
 <script setup lang="ts">

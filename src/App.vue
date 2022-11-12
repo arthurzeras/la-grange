@@ -1,5 +1,5 @@
 <template>
-  <main class="px-10">
+  <main>
     <router-view />
   </main>
 </template>
