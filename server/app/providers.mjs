@@ -30,30 +30,18 @@ export function getClients() {
     .reduce((clients, client) => ({ ...clients, [client.name]: client }), {});
 }
 
-/**
- * @param {string} filepath
- * @returns {k8s.AppsV1Api}
- */
 function getApiClient(filepath = '') {
   const client = new k8s.KubeConfig();
   client.loadFromFile(filepath);
   return client.makeApiClient(k8s.AppsV1Api);
 }
 
-/**
- * @param {string} filepath
- * @returns {k8s.AppsV1Api}
- */
 function getCoreApiClient(filepath = '') {
   const client = new k8s.KubeConfig();
   client.loadFromFile(filepath);
   return client.makeApiClient(k8s.CoreV1Api);
 }
 
-/**
- * @param {string} filepath
- * @returns {k8s.KubeConfig}
- */
 function getKubeConfigClient(filepath = '') {
   const client = new k8s.KubeConfig();
   client.loadFromFile(filepath);
