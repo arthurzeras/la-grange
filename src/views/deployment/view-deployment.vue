@@ -24,10 +24,10 @@ import { useRoute } from 'vue-router';
 import { useHttp } from '@/composables';
 import { computed, onMounted } from 'vue';
 import CardNamespace from './components/card-namespace.vue';
-import { IDeploymentResponse, IDeploymentItem } from '@/types/deployment';
+import { DeploymentList, Deployment } from 'kubernetes-types/apps/v1';
 
 const route = useRoute();
-const { execute, response } = useHttp<IDeploymentResponse>();
+const { execute, response } = useHttp<DeploymentList>();
 
 onMounted(() => execute({ url: `${route.params.cluster}/deployment` }));
 
@@ -42,15 +42,21 @@ const deployments = computed(() => {
 });
 
 const byNamespace = computed(() => {
-  type Namespaces = Record<string, IDeploymentItem[]>;
+  type Namespaces = Record<string, Deployment[]>;
 
   return deployments.value.reduce(
-    (namespaces: Namespaces, deployment: IDeploymentItem) => {
-      if (!(deployment.metadata.namespace in namespaces)) {
-        namespaces[deployment.metadata.namespace] = [];
+    (namespaces: Namespaces, deployment: Deployment) => {
+      const namespace = deployment?.metadata?.namespace || '';
+
+      if (!namespace) {
+        return namespaces;
       }
 
-      namespaces[deployment.metadata.namespace].push(deployment);
+      if (!(namespace in namespaces)) {
+        namespaces[namespace] = [];
+      }
+
+      namespaces[namespace].push(deployment);
       return namespaces;
     },
     {},

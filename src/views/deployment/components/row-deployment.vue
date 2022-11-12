@@ -1,20 +1,18 @@
 <template>
   <tr class="border border-gray-200 last:border-0">
     <td class="pl-4 py-4 w-1/4 text-left">
-      {{ deployment.metadata.name }}
+      {{ deployment.metadata?.name }}
     </td>
 
     <td class="py-4 w-2/4 text-left">
       <span class="inline-block break-all">
-        {{ deployment.spec.template.spec.containers[0].image }}
+        {{ image }}
       </span>
 
       <button
         class="ml-1 inline-block"
         title="Copy image name"
-        @click="
-          copyToClipboard(deployment.spec.template.spec.containers[0].image)
-        "
+        @click="copyToClipboard(image)"
       >
         <x-icon name="clipboard-document-list" class="h-4 w-4 text-blue-500" />
       </button>
@@ -22,9 +20,9 @@
 
     <td class="pr-4 py-4 w-1/4 text-right">
       <span class="inline-block">
-        <span>{{ deployment.status.readyReplicas || 0 }}</span>
+        <span>{{ deployment.status?.readyReplicas || 0 }}</span>
         <span>/</span>
-        <span>{{ deployment.status.replicas || 0 }}</span>
+        <span>{{ deployment.status?.replicas || 0 }}</span>
       </span>
 
       <button
@@ -38,22 +36,32 @@
   </tr>
 
   <tr v-if="detailsRowVisible">
-    This is the detail row
+    <td class="p-4 bg-gray-200" colspan="4">
+      <deployment-detail :deployment="deployment" />
+    </td>
   </tr>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, toRefs } from 'vue';
 import { copyToClipboard } from '@/common/func';
-import { IDeploymentItem } from '@/types/deployment';
+import { Deployment } from 'kubernetes-types/apps/v1';
+import DeploymentDetail from './deployment-detail.vue';
 
-defineProps<{
-  deployment: IDeploymentItem;
+const props = defineProps<{
+  deployment: Deployment;
 }>();
+
+const { deployment } = toRefs(props);
 
 const detailsRowVisible = ref<boolean>(false);
 
 const toggleDetailsIcon = computed(() =>
   detailsRowVisible.value ? 'chevron-double-down' : 'chevron-double-up',
 );
+
+const image = computed(() => {
+  const containers = deployment.value.spec?.template?.spec?.containers || [];
+  return containers[0].image || '';
+});
 </script>

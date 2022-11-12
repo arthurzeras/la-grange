@@ -19,7 +19,7 @@
       <tbody>
         <row-deployment
           v-for="deployment in deployments"
-          :key="deployment.metadata.uid"
+          :key="deployment.metadata?.uid"
           :deployment="deployment"
         />
       </tbody>
@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import RowDeployment from './row-deployment.vue';
-import { IDeploymentItem } from '@/types/deployment';
+import { Deployment } from 'kubernetes-types/apps/v1';
 
 defineProps<{
   name: string;
-  deployments: IDeploymentItem[];
+  deployments: Deployment[];
 }>();
 </script>
