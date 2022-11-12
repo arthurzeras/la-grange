@@ -27,7 +27,7 @@ export function listClusters(req, res) {
 }
 
 /**
- * Return a list of deployments based on cluster and namespace
+ * Return a list of deployments based on cluster
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {{name: string, url: string}[]}
@@ -46,5 +46,36 @@ export async function listDeployments(req, res) {
     return res.send(response.body);
   } catch (error) {
     return res.status(500).send({ message: 'Cannot list deployments' });
+  }
+}
+
+/**
+ * Return a list of pods based on cluster and namespace
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {{name: string, url: string}[]}
+ */
+export async function listPods(req, res) {
+  const { deployment } = req.query;
+  const { cluster, namespace } = getClusterAndNamespaceFromUrl(req.url);
+
+  if (!(cluster in clients)) {
+    return res.status(400).send({ message: `cluster "${cluster}" not found` });
+  }
+
+  const core = clients[cluster].core;
+
+  try {
+    const { body } = await core.listNamespacedPod(namespace);
+
+    if (deployment) {
+      body.items = body.items.filter((item) =>
+        item.metadata.name.includes(deployment),
+      );
+    }
+
+    return res.send(body);
+  } catch (error) {
+    return res.status(500).send({ message: 'Cannot list pods' });
   }
 }

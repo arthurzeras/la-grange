@@ -5,5 +5,6 @@ const router = Router();
 
 router.get('/cluster/', Handlers.listClusters);
 router.get('/:cluster/deployment', Handlers.listDeployments);
+router.get('/:cluster/:namespace/pod', Handlers.listPods);
 
 export default router;
