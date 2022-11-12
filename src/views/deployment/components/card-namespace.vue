@@ -26,8 +26,25 @@
             {{ deployment.metadata.name }}
           </td>
 
-          <td class="py-4 w-2/4 text-left break-all">
-            {{ deployment.spec.template.spec.containers[0].image }}
+          <td class="py-4 w-2/4 text-left">
+            <span class="inline-block break-all">
+              {{ deployment.spec.template.spec.containers[0].image }}
+            </span>
+
+            <button
+              class="ml-1 inline-block"
+              title="Copy image name"
+              @click="
+                copyToClipboard(
+                  deployment.spec.template.spec.containers[0].image,
+                )
+              "
+            >
+              <x-icon
+                name="clipboard-document-list"
+                class="h-4 w-4 text-blue-500"
+              />
+            </button>
           </td>
 
           <td class="pr-4 py-4 w-1/4 text-center">
@@ -43,6 +60,7 @@
 
 <script setup lang="ts">
 // import ListDeployment from './list-deployment.vue';
+import { copyToClipboard } from '@/common/func';
 import { IDeploymentItem } from '@/types/deployment';
 
 defineProps<{
