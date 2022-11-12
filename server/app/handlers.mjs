@@ -69,9 +69,11 @@ export async function listPods(req, res) {
     const { body } = await core.listNamespacedPod(namespace);
 
     if (deployment) {
-      body.items = body.items.filter((item) =>
-        item.metadata.name.includes(deployment),
-      );
+      body.items = body.items.filter((item) => {
+        const name = item.metadata.name || '';
+        const pattern = new RegExp(`${deployment}-\\w{9,}-\\w{5}`, 'g');
+        return name.replace(pattern, '').length === 0;
+      });
     }
 
     return res.send(body);
