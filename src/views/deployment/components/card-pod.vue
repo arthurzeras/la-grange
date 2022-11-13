@@ -3,7 +3,18 @@
     class="p-4 bg-gray-50 rounded-lg shadow border-b-4"
     :class="borderColorByStatus"
   >
-    {{ pod.metadata?.name }}
+    <div class="font-bold border-b border-b-gray-200 pb-1">
+      {{ pod.metadata?.name }}
+    </div>
+
+    <div class="text-sm pt-1 flex flex-row items-center justify-between">
+      <span>Restarts: {{ restarts }}</span>
+      <span v-if="message">
+        <x-tooltip :message="message">
+          <x-icon name="information-circle" class="w-5 h-5 text-gray-500" />
+        </x-tooltip>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -14,12 +25,28 @@ import { Pod } from 'kubernetes-types/core/v1';
 const props = defineProps<{ pod: Pod }>();
 const { pod } = toRefs(props);
 
-const borderColorByStatus = computed(() => {
-  const phases = new Map([
-    ['Running', 'border-b-green-500'],
-    ['Pending', 'border-b-blue-500'],
-  ]);
+const restarts = computed(() => statuses.value[0].restartCount);
+const statuses = computed(() => pod.value.status?.containerStatuses || []);
+const message = computed(() => {
+  const waiting = statuses.value[0].state?.waiting;
 
-  return phases.get(pod.value.status?.phase || '') || 'border-b-gray-100';
+  if (!waiting) {
+    return '';
+  }
+
+  return `${waiting.reason}: ${waiting.message}`;
+});
+
+const borderColorByStatus = computed(() => {
+  const phase = pod.value.status?.phase || '';
+  const ready = statuses.value[0]?.ready || false;
+
+  if (phase === 'Running') {
+    return ready ? 'border-b-green-500' : 'border-b-red-500';
+  }
+
+  const phases = new Map([['Pending', 'border-b-blue-500']]);
+
+  return phases.get(phase) || 'border-b-gray-100';
 });
 </script>
