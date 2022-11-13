@@ -51,6 +51,7 @@ export async function listDeployments(req, res) {
 
 /**
  * Return a list of pods based on cluster and namespace
+ * also filter by deployment using a querystring
  * @param {express.Request} req
  * @param {express.Response} res
  * @returns {{name: string, url: string}[]}
@@ -71,7 +72,7 @@ export async function listPods(req, res) {
     if (deployment) {
       body.items = body.items.filter((item) => {
         const name = item.metadata.name || '';
-        const pattern = new RegExp(`${deployment}-\\w{9,}-\\w{5}`, 'g');
+        const pattern = new RegExp(`${deployment}-\\w{7,}-\\w{5}`, 'g');
         return name.replace(pattern, '').length === 0;
       });
     }
