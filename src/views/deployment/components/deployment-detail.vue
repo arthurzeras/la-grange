@@ -1,6 +1,11 @@
 <template>
   <div class="flex flex-row gap-8">
-    <template v-if="!pods.length">
+    <!-- TODO: Try to use Suspense Later -->
+    <template v-if="isLoading">
+      <x-icon spin name="spinner" class="h-8 w-8 mx-auto" />
+    </template>
+
+    <template v-else-if="!pods.length">
       <p>This deployment has no pods</p>
     </template>
 
@@ -19,7 +24,7 @@ import { PodList } from 'kubernetes-types/core/v1';
 import { Deployment } from 'kubernetes-types/apps/v1';
 
 const route = useRoute();
-const { execute, response } = useHttp<PodList>();
+const { execute, response, isLoading } = useHttp<PodList>();
 
 const props = defineProps<{
   deployment: Deployment;
