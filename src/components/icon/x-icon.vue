@@ -10,7 +10,7 @@
       v-for="(path, i) in icon.paths"
       :key="i"
       :d="path"
-      stroke-width="2"
+      :stroke-width="icon.stroke || '2'"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
