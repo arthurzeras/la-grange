@@ -1,6 +1,8 @@
 import yaml from 'js-yaml';
 import express from 'express'; // eslint-disable-line no-unused-vars
 import { readFileSync } from 'fs';
+import { PassThrough } from 'stream';
+import k8s from '@kubernetes/client-node';
 import { getClients, kubeconfigDir } from './providers.mjs';
 import { getClusterAndNamespaceFromUrl } from './helpers.mjs';
 
@@ -81,4 +83,42 @@ export async function listPods(req, res) {
   } catch (error) {
     return res.status(500).send({ message: 'Cannot list pods' });
   }
+}
+
+/**
+ * Return a stream of logs coming from k8s pod
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+export async function getLogs(req, res) {
+  const [, cluster, namespace, pod] = req.url.split('/');
+
+  if (!(cluster in clients)) {
+    return res.status(400).send({ message: `cluster "${cluster}" not found` });
+  }
+
+  const { core, kube } = clients[cluster];
+
+  let container = '';
+
+  try {
+    const podInfo = await core.readNamespacedPod(pod, namespace);
+    container = (podInfo?.body?.spec?.containers || [])[0]?.name;
+  } catch (error) {
+    return res.status(400).send({ message: `Pod "${pod}" not found` });
+  }
+
+  const logStream = new PassThrough();
+
+  const k8sLog = new k8s.Log(kube);
+  const k8sLogOptions = {
+    follow: true,
+    tailLines: 50,
+    pretty: false,
+    timestamps: false,
+  };
+
+  k8sLog.log(namespace, pod, container, logStream, k8sLogOptions);
+
+  logStream.pipe(res);
 }
