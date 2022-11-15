@@ -3,6 +3,7 @@
     fill="none"
     stroke="currentColor"
     class="w-6 h-6 inline-block"
+    :class="{ 'animate-spin': props.spin }"
     :viewBox="`0 0 ${icon.size} ${icon.size}`"
   >
     <path
@@ -21,6 +22,7 @@ import { computed } from 'vue';
 import icons, { IconNames } from './icons';
 
 const props = defineProps<{
+  spin?: boolean;
   name: IconNames;
 }>();
 
