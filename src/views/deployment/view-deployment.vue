@@ -9,6 +9,15 @@
     </header>
 
     <article class="container mx-auto my-4 gap-4 flex flex-col">
+      <div class="block ml-auto">
+        <input
+          v-model="filter"
+          type="text"
+          class="w-96 border border-gray-200 rounded-lg px-4 py-2 shadow"
+          placeholder="Search by namespace or deployment..."
+        />
+      </div>
+
       <card-namespace
         v-for="(_deployments, name) in byNamespace"
         :key="name"
@@ -22,10 +31,11 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { useHttp } from '@/composables';
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import CardNamespace from './components/card-namespace.vue';
 import { DeploymentList, Deployment } from 'kubernetes-types/apps/v1';
 
+const filter = ref('');
 const route = useRoute();
 const { execute, response } = useHttp<DeploymentList>();
 
@@ -36,6 +46,15 @@ const deployments = computed(() => {
 
   if (!data?.items?.length) {
     return [];
+  }
+
+  if (filter.value) {
+    return data.items.filter((item) => {
+      const name = item.metadata?.name || '';
+      const namespaceName = item.metadata?.namespace || '';
+
+      return new RegExp(filter.value, 'g').test(`${name}${namespaceName}`);
+    });
   }
 
   return data.items;
