@@ -3,9 +3,11 @@
     class="p-4 bg-gray-50 rounded-lg shadow border-b-4"
     :class="borderColorByStatus"
   >
-    <div class="font-bold border-b border-b-gray-200 pb-1">
-      {{ pod.metadata?.name }}
-    </div>
+    <x-tooltip :message="podName">
+      <div class="pod-name">
+        {{ podName }}
+      </div>
+    </x-tooltip>
 
     <div class="text-sm pt-1 flex flex-row items-center justify-between">
       <span>Restarts: {{ restarts }}</span>
@@ -26,6 +28,7 @@ const props = defineProps<{ pod: Pod }>();
 const { pod } = toRefs(props);
 
 const restarts = computed(() => statuses.value[0].restartCount);
+const podName = computed(() => pod.value.metadata?.name || '--');
 const statuses = computed(() => pod.value.status?.containerStatuses || []);
 const message = computed(() => {
   const waiting = statuses.value[0].state?.waiting;
@@ -50,3 +53,10 @@ const borderColorByStatus = computed(() => {
   return phases.get(phase) || 'border-b-gray-100';
 });
 </script>
+
+<style scoped>
+.pod-name {
+  @apply font-bold border-b border-b-gray-200 pb-1
+    text-ellipsis w-full overflow-x-hidden whitespace-nowrap;
+}
+</style>

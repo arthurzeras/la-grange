@@ -1,17 +1,25 @@
 <template>
-  <div class="flex flex-row gap-8">
-    <!-- TODO: Try to use Suspense Later -->
-    <template v-if="isLoading">
-      <x-icon spin name="spinner" class="h-8 w-8 mx-auto" />
-    </template>
+  <div>
+    <!-- TODO: Try to use Suspense later -->
+    <x-icon
+      v-if="isLoading"
+      spin
+      name="spinner"
+      class="h-8 w-8 mx-auto !block"
+    />
 
-    <template v-else-if="!pods.length">
-      <p>This deployment has no pods</p>
-    </template>
+    <p v-else-if="!pods.length" class="text-center">
+      This deployment has no pods
+    </p>
 
-    <template v-else>
-      <card-pod v-for="pod in pods" :key="pod.metadata?.uid" :pod="pod" />
-    </template>
+    <div v-else class="deployment-pods">
+      <card-pod
+        v-for="pod in pods"
+        :key="pod.metadata?.uid"
+        :pod="pod"
+        class="deployment-pods__pod"
+      />
+    </div>
   </div>
 </template>
 
@@ -51,3 +59,17 @@ const pods = computed(() => {
   return data.items;
 });
 </script>
+
+<style scoped>
+.deployment-pods {
+  --gap: 12px;
+  @apply flex flex-wrap;
+  width: calc(100% + var(--gap));
+  margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
+}
+
+.deployment-pods__pod {
+  margin: var(--gap) 0 0 var(--gap);
+  width: calc(calc(100% / 5) - var(--gap));
+}
+</style>
