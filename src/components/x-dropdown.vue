@@ -7,7 +7,7 @@
     <ul v-if="showOptions" class="dropdown-ul">
       <li
         v-for="(option, i) in options"
-        :key="i"
+        :key="option.id || i"
         class="dropdown-li"
         @click="emit('selected', option)"
       >
@@ -23,6 +23,7 @@ import { IconNames } from './icon/icons';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 export type OptionType = {
+  id?: string;
   label: string;
   icon: IconNames;
 };
@@ -58,10 +59,10 @@ const deactivateEventListeners = () => {
 
 <style scoped>
 .dropdown-ul {
-  @apply absolute bg-gray-50 shadow-lg rounded-md top-8 border border-gray-200 w-48;
+  @apply absolute shadow-lg rounded-md top-8 border w-48 bg-gray-50 border-gray-200;
 }
 
 .dropdown-li {
-  @apply p-2 border-b border-b-200 last:border-0 cursor-pointer hover:bg-gray-200 transition-all flex gap-2 items-center;
+  @apply p-2 border-b last:border-0 cursor-pointer transition-all flex gap-2 items-center border-gray-200 hover:bg-gray-200;
 }
 </style>
