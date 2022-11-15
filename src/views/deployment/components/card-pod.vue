@@ -29,8 +29,11 @@
 
 <script lang="ts" setup>
 import { computed, toRefs } from 'vue';
+import { useLogs } from '@/composables';
 import { Pod } from 'kubernetes-types/core/v1';
 import XDropdownVue, { OptionType } from '@/components/x-dropdown.vue';
+
+const { getLogs } = useLogs();
 
 const options: OptionType[] = [
   { id: 'logs', icon: 'bars-4', label: 'View Logs' },
@@ -61,8 +64,10 @@ const borderColorByStatus = computed(() => {
   return phases.get(phase) || 'border-b-gray-100';
 });
 
-const handleDropdownSelect = (option: OptionType) => {
-  console.log(`TODO: Do something with selected option "${option.label}".`);
+const handleDropdownSelect = async (option: OptionType) => {
+  if (option.id === 'logs') {
+    getLogs(pod.value.metadata?.namespace || '', podName.value);
+  }
 };
 </script>
 
