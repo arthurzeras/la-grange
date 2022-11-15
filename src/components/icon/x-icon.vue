@@ -3,16 +3,16 @@
     fill="none"
     stroke="currentColor"
     class="w-6 h-6 inline-block"
+    :viewBox="`0 0 ${size} ${size}`"
     :class="{ 'animate-spin': props.spin }"
-    :viewBox="`0 0 ${icon.size} ${icon.size}`"
   >
     <path
       v-for="(path, i) in icon.paths"
       :key="i"
       :d="path"
-      :stroke-width="icon.stroke || '2'"
       stroke-linecap="round"
       stroke-linejoin="round"
+      :stroke-width="icon.stroke || '2'"
     />
   </svg>
 </template>
@@ -27,4 +27,5 @@ const props = defineProps<{
 }>();
 
 const icon = computed(() => icons[props.name]);
+const size = computed(() => icon.value.size || '24');
 </script>
